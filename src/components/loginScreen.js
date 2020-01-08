@@ -23,11 +23,10 @@ export default class LoginScreen extends Component {
     super(props);
     this.state = {
       loginDisabled: false,
-      loginTried: 0,
       username: 'user@gmail.com',
       password: '123456',
       valid_username: 'user@gmail.com',
-      valid_password: '123456',
+      valid_password: 'com123',
     };
   }
 
@@ -40,9 +39,24 @@ export default class LoginScreen extends Component {
     this.setState({password, loginDisabled: disable});
   };
   _OnLoginPressed = () => {
-    this.setState(state => ({loginTried: state.loginTried + 1}));
-
     const {valid_username, valid_password, username, password} = this.state;
+    // Length validation
+    if (username.length < 3) {
+      Alert.alert('Error', 'Username must me atleast 3 character long!');
+      return;
+    }
+
+    // First 3 char of Password must be same as last 3 char of username
+    const last3Username = username.substr(username.length - 3);
+    const first3Password = password.substring(0, 3);
+    if (last3Username !== first3Password) {
+      Alert.alert(
+        'Error',
+        'First 3 character of Password must be same as last 3 character of username!',
+      );
+      return;
+    }
+
     if (
       username.toLowerCase() === valid_username.toLowerCase() &&
       password === valid_password
@@ -109,7 +123,7 @@ export default class LoginScreen extends Component {
                 </View>
               </TouchableOpacity>
               <MyButton
-                title="LOGIN"
+                title="SIGN IN"
                 onPress={this._OnLoginPressed}
                 disabled={disabled}
               />

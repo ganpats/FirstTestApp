@@ -1,8 +1,19 @@
-import {INCREMENT_IMAGE_COUNT} from './../constants';
+import {ADD_IMAGE} from './../constants';
 
-export function incrementImageCount(userData) {
+export function setImage(strUri) {
   return {
-    type: INCREMENT_IMAGE_COUNT,
-    payload: userData,
+    type: ADD_IMAGE,
+    payload: strUri,
+  };
+}
+
+export function addImage(uri) {
+  return dispatch => {
+    try {
+      dispatch(setImage(uri));
+      return 0;
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
