@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, Platform, Alert} from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import React, { Component } from 'react';
+import { StyleSheet, View, StatusBar, Platform, Alert } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import MyButton from './myButton';
 import ImagePicker from 'react-native-image-picker';
-import {connect} from 'react-redux';
-import {addImage} from './../actions/imageCount';
+import { connect } from 'react-redux';
+import { addImage } from '../actions/addImage';
+import { updateCount } from '../actions/updateCount';
 
 class SelectImageScreen extends Component {
   static navigationOptions = {
@@ -12,41 +13,22 @@ class SelectImageScreen extends Component {
     title: 'Select Image',
   };
 
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //   buttonTapCount: 0,
-    // };
-  }
-
   _OnButtonPressed = () => {
-    //this.setState(state => ({buttonTapCount: state.buttonTapCount + 1}));
-
+    const { count, updateCount } = this.props;
+    updateCount(count + 1);
     ImagePicker.showImagePicker(options, response => {
-      //console.log('Response = ', response);
-
       if (response.didCancel) {
-        console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        Alert.alert('Error', response.error);
       } else {
-        // const source = {uri: response.uri};
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        // this.setState({
-        //   avatarSource: source,
-        //   filePath: response,
-        //   fileData: response.data,
-        //   fileUri: response.uri,
-        // });
-        delete response.data;
-        this.props.addImage(response);
-
-        Alert.alert('Success!', 'Image Saved!', [{text: 'OK'}], {
-          cancelable: true,
-        });
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(response.type)) {
+          this.props.addImage(response);
+          Alert.alert('Success!', 'Image Saved!', [{ text: 'OK' }], {
+            cancelable: true,
+          });
+        } else {
+          Alert.alert('Error', 'Please select image only!');
+        }
       }
     });
   };
@@ -56,11 +38,11 @@ class SelectImageScreen extends Component {
   };
   render() {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
-    const {images} = this.props;
+    const { images } = this.props;
     return (
       <>
         <StatusBar barStyle={barStyle} />
-        <SafeAreaView style={styles.mainViewBg} forceInset={{top: 'always'}}>
+        <SafeAreaView style={styles.mainViewBg} forceInset={{ top: 'always' }}>
           <View style={styles.containerView}>
             <MyButton title="Select Image" onPress={this._OnButtonPressed} />
             {images.length > 0 && (
@@ -90,19 +72,19 @@ const styles = StyleSheet.create({
 
 const options = {
   title: 'Select Image',
-  //customButtons: [{name: 'customOptionKey', title: 'Choose Photo ...'}],
   storageOptions: {
     skipBackup: true,
     path: 'images',
   },
 };
 
-const mapStateToProps = state => {
-  return {images: state.addImageReducer.images};
+const mapStateToProps = ({ addImageReducer, updateCountReducer }) => {
+  return { images: addImageReducer.images, count: updateCountReducer.count };
 };
 
 const mapDispatchToProps = {
   addImage: uri => addImage(uri),
+  updateCount: count => updateCount(count),
 };
 
 export default connect(

@@ -1,4 +1,4 @@
-import {ADD_IMAGE} from '../constants';
+import { ADD_IMAGE } from '../constants';
 
 const initialState = {
   images: [],

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,8 +15,8 @@ import MyButton from './myButton';
 
 export default class LoginScreen extends Component {
   static navigationOptions = {
-    drawerLabel: 'Login',
     title: 'Login',
+    //headerShown: false,
   };
 
   constructor(props) {
@@ -24,25 +24,25 @@ export default class LoginScreen extends Component {
     this.state = {
       loginDisabled: false,
       username: 'user@gmail.com',
-      password: '123456',
-      valid_username: 'user@gmail.com',
-      valid_password: 'com123',
+      password: 'com123',
     };
   }
 
-  _OnUsernameChange = username => {
-    const disable = this.state.password === '' || username === '';
-    this.setState({username, loginDisabled: disable});
+  _OnTextInputChange = keyName => {
+    return text => {
+      this.setState({ [keyName]: text }, () => {
+        const disable =
+          this.state.password === '' || this.state.username === '';
+        this.setState({ loginDisabled: disable });
+      });
+    };
   };
-  _OnPasswordChange = password => {
-    const disable = this.state.username === '' || password === '';
-    this.setState({password, loginDisabled: disable});
-  };
+
   _OnLoginPressed = () => {
-    const {valid_username, valid_password, username, password} = this.state;
+    const { username, password } = this.state;
     // Length validation
     if (username.length < 3) {
-      Alert.alert('Error', 'Username must me atleast 3 character long!');
+      Alert.alert('Error', 'Username must be at least 3 character long!');
       return;
     }
 
@@ -57,37 +57,22 @@ export default class LoginScreen extends Component {
       return;
     }
 
-    if (
-      username.toLowerCase() === valid_username.toLowerCase() &&
-      password === valid_password
-    ) {
-      // Success
-      Alert.alert(
-        'Sucess',
-        'Login is successfull.',
-        [
-          {
-            text: 'OK',
-            //onPress: () => this.props.navigation.navigate(''),
-          },
-        ],
-        {cancelable: false},
-      );
-    } else {
-      // Failed
-      Alert.alert(
-        'Error',
-        'Username and password not matched!',
-        [{text: 'OK'}],
-        {cancelable: true},
-      );
-    }
+    // Success
+    Alert.alert(
+      'Sucess',
+      'Login is successfull.',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.props.navigation.navigate('Drawer'),
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
-  _OnForgotPasswordPressed = () => {};
-
   render() {
-    const disabled = this.state.loginDisabled;
+    const { loginDisabled, username, password } = this.state;
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
     return (
       <>
@@ -100,22 +85,22 @@ export default class LoginScreen extends Component {
               <TextInput
                 style={styles.textInput}
                 placeholder="Enter your username"
-                value={this.state.username}
-                onChangeText={this._OnUsernameChange}
+                name="username"
+                value={username}
+                onChangeText={this._OnTextInputChange('username')}
               />
               <View style={styles.inputBaseline} />
               <Text style={styles.labelTitle}>PASSWORD</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Enter your password"
-                value={this.state.password}
+                name="password"
+                value={password}
                 secureTextEntry={true}
-                onChangeText={this._OnPasswordChange}
+                onChangeText={this._OnTextInputChange('password')}
               />
               <View style={styles.inputBaseline} />
-              <TouchableOpacity
-                onPress={this._OnForgotPasswordPressed}
-                style={styles.forgotPasswordView}>
+              <TouchableOpacity style={styles.forgotPasswordView}>
                 <View>
                   <Text style={styles.forgotPasswordText}>
                     Forgot Password?
@@ -125,7 +110,7 @@ export default class LoginScreen extends Component {
               <MyButton
                 title="SIGN IN"
                 onPress={this._OnLoginPressed}
-                disabled={disabled}
+                disabled={loginDisabled}
               />
             </View>
           </ScrollView>

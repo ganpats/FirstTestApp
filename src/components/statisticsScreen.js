@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,10 +7,10 @@ import {
   StatusBar,
   Platform,
   BackHandler,
-  Alert,
+  NativeModules,
 } from 'react-native';
 import MyButton from './myButton';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 class StatisticsScreen extends Component {
   static navigationOptions = {
@@ -24,26 +24,21 @@ class StatisticsScreen extends Component {
   _OnExitAppPressed = () => {
     BackHandler.exitApp();
     if (Platform.OS === 'ios') {
-      Alert.alert(
-        'Warning',
-        'You must close app yourself.',
-        [{text: 'OK'}],
-        {},
-      );
+      NativeModules.ExitManager.exitApp();
     }
   };
 
   render() {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
-    const {images} = this.props;
+    const { count } = this.props;
     return (
       <>
         <StatusBar barStyle={barStyle} />
-        <SafeAreaView style={styles.mainViewBg} forceInset={{top: 'always'}}>
+        <SafeAreaView style={styles.mainViewBg} forceInset={{ top: 'always' }}>
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.text}>
-                User has clicked {images.length} time(s) on select image button
+                User has clicked {count} time(s) on select image button
               </Text>
             </View>
             <View style={styles.buttonView}>
@@ -82,8 +77,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {images: state.addImageReducer.images};
+const mapStateToProps = ({ addImageReducer, updateCountReducer }) => {
+  return { images: addImageReducer.images, count: updateCountReducer.count };
 };
 
 export default connect(mapStateToProps)(StatisticsScreen);
