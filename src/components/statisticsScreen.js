@@ -11,10 +11,20 @@ import {
 } from 'react-native';
 import MyButton from './myButton';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { comStyle } from '../constants/';
 
 class StatisticsScreen extends Component {
   static navigationOptions = {
     drawerLabel: 'Statistics',
+    drawerIcon: () => (
+      <Ionicons
+        name="ios-analytics"
+        size={30}
+        style={comStyle.drawerIcon}
+        color="#000"
+      />
+    ),
   };
 
   constructor(props) {

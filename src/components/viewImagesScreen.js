@@ -13,10 +13,20 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import { connect } from 'react-redux';
 import MyButton from './myButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { comStyle } from '../constants/';
 
 class ViewImageScreen extends Component {
   static navigationOptions = {
     drawerLabel: 'View Image',
+    drawerIcon: () => (
+      <Ionicons
+        name="ios-images"
+        size={30}
+        style={comStyle.drawerIcon}
+        color="#000"
+      />
+    ),
   };
 
   _OnAddImagePressed = () => {

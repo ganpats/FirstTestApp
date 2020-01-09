@@ -6,11 +6,21 @@ import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { addImage } from '../actions/addImage';
 import { updateCount } from '../actions/updateCount';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { comStyle } from '../constants/';
 
 class SelectImageScreen extends Component {
   static navigationOptions = {
     drawerLabel: 'Select Image',
     title: 'Select Image',
+    drawerIcon: () => (
+      <Ionicons
+        name="ios-camera"
+        size={30}
+        style={comStyle.drawerIcon}
+        color="#000"
+      />
+    ),
   };
 
   _OnButtonPressed = () => {
