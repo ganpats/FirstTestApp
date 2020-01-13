@@ -1,26 +1,35 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, StatusBar, Platform, Alert } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  StatusBar,
+  Platform,
+  Alert,
+} from 'react-native';
 import MyButton from './myButton';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { addImage } from '../actions/addImage';
 import { updateCount } from '../actions/updateCount';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { comStyle } from '../constants/';
+import * as common from '../constants/';
 
 class SelectImageScreen extends Component {
   static navigationOptions = {
-    drawerLabel: 'Select Image',
-    title: 'Select Image',
+    drawerLabel: common.SELECT_IMAGE,
     drawerIcon: () => (
       <Ionicons
         name="ios-camera"
         size={30}
-        style={comStyle.drawerIcon}
+        style={common.comStyles.drawerIcon}
         color="#000"
       />
     ),
+  };
+
+  componentDidMount = () => {
+    this.props.navigation.setParams({ title: common.SELECT_IMAGE });
   };
 
   _OnButtonPressed = () => {
@@ -43,24 +52,32 @@ class SelectImageScreen extends Component {
     });
   };
 
+  _OnBackPressed = title => {
+    this.props.navigation.goBack();
+  };
+
   _OnSelectedImagePressed = () => {
     this.props.navigation.navigate('ViewImage');
   };
+
   render() {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
     const { images } = this.props;
     return (
       <>
         <StatusBar barStyle={barStyle} />
-        <SafeAreaView style={styles.mainViewBg} forceInset={{ top: 'always' }}>
+        <SafeAreaView style={styles.mainViewBg}>
+          {/* <MyHeader title="Select Image" onBackPress={this._OnBackPressed} /> */}
           <View style={styles.containerView}>
-            <MyButton title="Select Image" onPress={this._OnButtonPressed} />
-            {images.length > 0 && (
-              <MyButton
-                title="View Selected Image(s)"
-                onPress={this._OnSelectedImagePressed}
-              />
-            )}
+            <View style={styles.buttonContainer}>
+              <MyButton title="Select Image" onPress={this._OnButtonPressed} />
+              {images.length > 0 && (
+                <MyButton
+                  title="View Selected Image(s)"
+                  onPress={this._OnSelectedImagePressed}
+                />
+              )}
+            </View>
           </View>
         </SafeAreaView>
       </>
@@ -71,12 +88,17 @@ class SelectImageScreen extends Component {
 const styles = StyleSheet.create({
   mainViewBg: {
     flex: 1,
-    backgroundColor: '#003f5c',
   },
   containerView: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#003f5c',
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'center',
     marginHorizontal: 40,
+    backgroundColor: '#003f5c',
   },
 });
 

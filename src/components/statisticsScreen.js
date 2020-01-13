@@ -12,16 +12,16 @@ import {
 import MyButton from './myButton';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { comStyle } from '../constants/';
+import * as common from '../constants/';
 
 class StatisticsScreen extends Component {
   static navigationOptions = {
-    drawerLabel: 'Statistics',
+    drawerLabel: common.STATISTICS,
     drawerIcon: () => (
       <Ionicons
         name="ios-analytics"
         size={30}
-        style={comStyle.drawerIcon}
+        style={common.comStyles.drawerIcon}
         color="#000"
       />
     ),
@@ -30,6 +30,10 @@ class StatisticsScreen extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentDidMount = () => {
+    this.props.navigation.setParams({ title: common.STATISTICS });
+  };
 
   _OnExitAppPressed = () => {
     BackHandler.exitApp();
@@ -44,7 +48,7 @@ class StatisticsScreen extends Component {
     return (
       <>
         <StatusBar barStyle={barStyle} />
-        <SafeAreaView style={styles.mainViewBg} forceInset={{ top: 'always' }}>
+        <SafeAreaView style={styles.mainViewBg}>
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.text}>
@@ -67,11 +71,11 @@ class StatisticsScreen extends Component {
 const styles = StyleSheet.create({
   mainViewBg: {
     flex: 1,
-    backgroundColor: '#003f5c',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#003f5c',
   },
   textContainer: {
     justifyContent: 'center',

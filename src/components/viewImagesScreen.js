@@ -3,6 +3,7 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
+  SafeAreaView,
   View,
   Image,
   Text,
@@ -10,23 +11,26 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
 import { connect } from 'react-redux';
 import MyButton from './myButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { comStyle } from '../constants/';
+import * as common from '../constants/';
 
 class ViewImageScreen extends Component {
   static navigationOptions = {
-    drawerLabel: 'View Image',
+    drawerLabel: common.VIEW_IMAGE,
     drawerIcon: () => (
       <Ionicons
         name="ios-images"
         size={30}
-        style={comStyle.drawerIcon}
+        style={common.comStyles.drawerIcon}
         color="#000"
       />
     ),
+  };
+
+  componentDidMount = () => {
+    this.props.navigation.setParams({ title: common.VIEW_IMAGE });
   };
 
   _OnAddImagePressed = () => {
@@ -56,17 +60,22 @@ class ViewImageScreen extends Component {
         <StatusBar barStyle={barStyle} />
         <SafeAreaView style={styles.mainViewBg}>
           <View style={styles.containerView}>
-            {hasImages && (
-              <FlatList
-                data={images}
-                renderItem={this._imageItem}
-                keyExtractor={item => item.fileName.toString()}
-                style={styles.flatlist}
-                horizontal={true}
-              />
-            )}
-            <View style={styles.buttonView}>
-              <MyButton title={buttonTitle} onPress={this._OnAddImagePressed} />
+            <View style={styles.subContainerView}>
+              {hasImages && (
+                <FlatList
+                  data={images}
+                  renderItem={this._imageItem}
+                  keyExtractor={item => item.fileName.toString()}
+                  style={styles.flatlist}
+                  horizontal={true}
+                />
+              )}
+              <View style={styles.buttonView}>
+                <MyButton
+                  title={buttonTitle}
+                  onPress={this._OnAddImagePressed}
+                />
+              </View>
             </View>
           </View>
         </SafeAreaView>
@@ -79,10 +88,14 @@ const width = Dimensions.get('window').width - 16;
 const styles = StyleSheet.create({
   mainViewBg: {
     flex: 1,
-    backgroundColor: '#003f5c',
     justifyContent: 'center',
   },
   containerView: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#003f5c',
+  },
+  subContainerView: {
     justifyContent: 'center',
   },
   myCard: {

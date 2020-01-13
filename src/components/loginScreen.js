@@ -15,8 +15,7 @@ import MyButton from './myButton';
 
 export default class LoginScreen extends Component {
   static navigationOptions = {
-    title: 'Login',
-    //headerShown: false,
+    headerShown: false,
   };
 
   constructor(props) {

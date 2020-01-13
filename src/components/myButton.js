@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     marginBottom: 30,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch',
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    color: 'red', //#fb5b5a
+    color: '#fb5b5a',
+    fontWeight: 'bold',
   },
 });
